@@ -1295,3 +1295,10 @@ blockquote {
     margin-right: 0;
   }
 }
+
+.angelList{
+  background-image: url("../img/angelList.png");
+  background-size: contain;
+  width: 11pt;
+  height: 15pt
+}
