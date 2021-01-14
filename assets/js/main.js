@@ -1,83 +1,142 @@
-/*
-	Spectral by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+/**
+* Template Name: Folio - v2.2.0
+* Template URL: https://bootstrapmade.com/folio-bootstrap-portfolio-template/
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
 */
-
 (function($) {
+  "use strict";
 
-	var	$window = $(window),
-		$body = $('body'),
-		$wrapper = $('#page-wrapper'),
-		$banner = $('#banner'),
-		$header = $('#header');
+  // Smooth scroll for the navigation menu and links with .scrollto classes
+  var scrolltoOffset = $('#main-nav').outerHeight() - 1;
+  $(document).on('click', '.nav-menu a, .mobile-nav a, .scrollto', function(e) {
+    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      if (target.length) {
+        e.preventDefault();
 
-	// Breakpoints.
-		breakpoints({
-			xlarge:   [ '1281px',  '1680px' ],
-			large:    [ '981px',   '1280px' ],
-			medium:   [ '737px',   '980px'  ],
-			small:    [ '481px',   '736px'  ],
-			xsmall:   [ null,      '480px'  ]
-		});
+        var scrollto = target.offset().top - scrolltoOffset;
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+        $('html, body').animate({
+          scrollTop: scrollto
+        }, 1500, 'easeInOutExpo');
 
-	// Mobile?
-		if (browser.mobile)
-			$body.addClass('is-mobile');
-		else {
+        if (window.matchMedia("(max-width:991px)").matches) {
+          $('.nav-menu').hide();
+        }
+        return false;
+      }
+    }
+  });
 
-			breakpoints.on('>medium', function() {
-				$body.removeClass('is-mobile');
-			});
+  // Activate smooth scroll on page load with hash links in the url
+  $(document).ready(function() {
+    if (window.location.hash) {
+      var initial_nav = window.location.hash;
+      if ($(initial_nav).length) {
+        var scrollto = $(initial_nav).offset().top - scrolltoOffset;
+        $('html, body').animate({
+          scrollTop: scrollto
+        }, 1500, 'easeInOutExpo');
+      }
+    }
+  });
 
-			breakpoints.on('<=medium', function() {
-				$body.addClass('is-mobile');
-			});
+  // ========================================================================= //
+  //  //NAVBAR SHOW - HIDE
+  // ========================================================================= //
 
-		}
+  $(window).scroll(function() {
+    var scroll = $(window).scrollTop();
+    if (!$('.subpage-nav').length) {
+      if (scroll > 200) {
+        $("#main-nav").slideDown(700);
+      } else {
+        $("#main-nav").slideUp(700);
+      }
+    }
+  });
 
-	// Scrolly.
-		$('.scrolly')
-			.scrolly({
-				speed: 1500,
-				offset: $header.outerHeight()
-			});
+  // ========================================================================= //
+  //  // RESPONSIVE MENU
+  // ========================================================================= //
 
-	// Menu.
-		$('#menu')
-			.append('<a href="#menu" class="close"></a>')
-			.appendTo($body)
-			.panel({
-				delay: 500,
-				hideOnClick: true,
-				hideOnSwipe: true,
-				resetScroll: true,
-				resetForms: true,
-				side: 'right',
-				target: $body,
-				visibleClass: 'is-menu-visible'
-			});
+  $('.responsive').on('click', function(e) {
+    $('.nav-menu').slideToggle();
+  });
 
-	// Header.
-		if ($banner.length > 0
-		&&	$header.hasClass('alt')) {
+  // ========================================================================= //
+  //  Typed Js
+  // ========================================================================= //
 
-			$window.on('resize', function() { $window.trigger('scroll'); });
+  var typed = $(".typed");
 
-			$banner.scrollex({
-				bottom:		$header.outerHeight() + 1,
-				terminate:	function() { $header.removeClass('alt'); },
-				enter:		function() { $header.addClass('alt'); },
-				leave:		function() { $header.removeClass('alt'); }
-			});
+  $(function() {
+    var strings = $('.typed-items').text();
+    strings = $('.typed-items').data('typed-person') + ',' + strings;
+    strings = strings.split(',');
 
-		}
+    typed.typed({
+      strings: strings,
+      typeSpeed: 100,
+      loop: true,
+    });
+  });
+
+  // ========================================================================= //
+  //  Owl Carousel Services
+  // ========================================================================= //
+
+  $('.services-carousel').owlCarousel({
+    autoplay: true,
+    loop: true,
+    margin: 20,
+    dots: true,
+    nav: false,
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1
+      },
+      768: {
+        items: 2
+      },
+      900: {
+        items: 4
+      }
+    }
+  });
+
+  // ========================================================================= //
+  //  Porfolio isotope and filter
+  // ========================================================================= //
+  $(window).on('load', function() {
+    var portfolioIsotope = $('.portfolio-container').isotope({
+      itemSelector: '.portfolio-item',
+      layoutMode: 'fitRows'
+    });
+
+    $('#portfolio-flters li').on('click', function() {
+      $("#portfolio-flters li").removeClass('filter-active');
+      $(this).addClass('filter-active');
+
+      portfolioIsotope.isotope({
+        filter: $(this).data('filter')
+      });
+    });
+  });
+
+  // Initiate venobox (lightbox feature used in portofilo)
+  $(document).ready(function() {
+    $('.venobox').venobox();
+  });
+
+  // Portfolio details carousel
+  $(".portfolio-details-carousel").owlCarousel({
+    autoplay: true,
+    dots: true,
+    loop: true,
+    items: 1
+  });
 
 })(jQuery);
